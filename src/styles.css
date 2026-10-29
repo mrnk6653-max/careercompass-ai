@@ -66,3 +66,161 @@
 .form-error{display:flex;gap:8px;align-items:flex-start;color:#b42318;background:#fff3f2;border:1px solid #f4d4d1;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.5}
 @media(max-width:850px){.feature-layout{grid-template-columns:1fr}.plan-week-grid{grid-template-columns:1fr}.generated-plan-header{flex-direction:column}.quiz-options{grid-template-columns:1fr}}
 @media(max-width:520px){.feature-form,.feature-side-card,.quiz-panel{padding:17px}.form-two-col{grid-template-columns:1fr;gap:0}.generated-plan-header h2{font-size:20px}.quiz-score{width:68px;height:68px}}
+
+/* =========================================
+   CareerCompass AI — Typography Refinement
+   Only adjusts text sizes and readability.
+   ========================================= */
+
+/* Navigation and buttons */
+.landing-nav nav a,
+.nav-signin,
+.nav-item {
+  font-size: 14px;
+}
+
+.button,
+.button-sm {
+  font-size: 14px;
+}
+
+.text-button,
+.card-link,
+.inline-link {
+  font-size: 13px;
+}
+
+/* Main page headings */
+.section-title h2 {
+  font-size: 22px;
+}
+
+.welcome-row h1 {
+  font-size: 28px;
+}
+
+.challenge-main h1,
+.completion-card h1 {
+  font-size: 26px;
+}
+
+/* Card headings */
+.quick-interest-card strong,
+.opportunity-card h3,
+.discovery-card h3,
+.career-card h3,
+.insight-card h3 {
+  font-size: 16px;
+}
+
+/* Body text and descriptions */
+.section-title p,
+.welcome-row p,
+.banner-copy p,
+.discovery-card p,
+.career-card > p,
+.opportunity-desc,
+.insight-card p,
+.notice-box p,
+.modal-lead {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* Dashboard labels and supporting information */
+.stat-label,
+.stat-note,
+.quick-interest-card > span:not(.quick-interest-icon),
+.roadmap-preview-item strong,
+.roadmap-preview-item > div span,
+.task-status {
+  font-size: 12px;
+}
+
+/* Forms */
+.form-label,
+.form-label input,
+.form-label select,
+.search-field input,
+.filter-field select,
+.chat-input-row input {
+  font-size: 14px;
+}
+
+/* AI Companion */
+.chat-header strong {
+  font-size: 14px;
+}
+
+.chat-header span {
+  font-size: 12px;
+}
+
+.chat-bubble {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.chat-suggestions button {
+  font-size: 12px;
+}
+
+/* Study plan and quiz */
+.feature-form .form-label {
+  font-size: 14px;
+}
+
+.feature-form-heading h2,
+.plan-week-heading h3 {
+  font-size: 18px;
+}
+
+.feature-form-heading p,
+.feature-side-card p,
+.generated-plan-header p {
+  font-size: 14px;
+}
+
+.plan-task strong {
+  font-size: 14px;
+}
+
+.plan-task p,
+.quiz-option,
+.quiz-explanation p {
+  font-size: 13px;
+}
+
+/* Mobile typography */
+@media (max-width: 680px) {
+  .section-title h2 {
+    font-size: 22px;
+  }
+
+  .welcome-row h1 {
+    font-size: 23px;
+  }
+
+  .section-title p,
+  .welcome-row p,
+  .banner-copy p,
+  .discovery-card p,
+  .career-card > p,
+  .opportunity-desc {
+    font-size: 13px;
+  }
+
+  .nav-item {
+    font-size: 14px;
+  }
+
+  .chat-bubble {
+    font-size: 13px;
+  }
+
+  .stat-label,
+  .stat-note,
+  .task-status {
+    font-size: 12px;
+  }
+}
