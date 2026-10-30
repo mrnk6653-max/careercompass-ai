@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Brain, CheckCircle2, LoaderCircle, RotateCcw, Sparkles, Target } from 'lucide-react'
 import SectionTitle from '../components/SectionTitle'
+import { setUserItem } from '../utils/userStorage'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${window.location.protocol}//${window.location.hostname}:5000`
 
 export default function Quiz() {
   const [topic, setTopic] = useState('Trees and Graphs in DSA')
@@ -20,6 +21,7 @@ export default function Quiz() {
     try {
       const response = await fetch(`${API_BASE_URL}/api/quiz/generate`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic, difficulty, count: Number(count) })
       })
@@ -32,6 +34,11 @@ export default function Quiz() {
   }
 
   const score = quiz ? quiz.questions.reduce((total, question, index) => total + (Number(answers[index]) === question.answerIndex ? 1 : 0), 0) : 0
+  function submitQuiz() {
+    const total = quiz.questions.length
+    setUserItem('cc-last-quiz', JSON.stringify({ topic, difficulty, score, total, percentage: Math.round(score / total * 100), date: new Date().toISOString() }))
+    setSubmitted(true)
+  }
 
   return <div className="page-content">
     <SectionTitle eyebrow="PRACTISE & REFLECT" title="Check what you understand." description="Generate a short multiple-choice quiz on a topic you're learning, then review explanations for every question."/>
@@ -49,7 +56,7 @@ export default function Quiz() {
     {quiz && <section className="quiz-panel">
       <div className="generated-plan-header"><div><span className="eyebrow">{difficulty.toUpperCase()} PRACTICE</span><h2>{quiz.title}</h2><p>{submitted ? `You scored ${score} out of ${quiz.questions.length}. Review each explanation below.` : `Answer all ${quiz.questions.length} questions, then submit to see your results.`}</p></div>{submitted && <div className="quiz-score"><strong>{Math.round(score/quiz.questions.length*100)}%</strong><span>Your score</span></div>}</div>
       {quiz.questions.map((question,index)=><article className={`quiz-question ${submitted ? (Number(answers[index])===question.answerIndex?'quiz-correct':'quiz-incorrect') : ''}`} key={`${index}-${question.question}`}><h3><span>{index+1}</span>{question.question}</h3><div className="quiz-options">{question.options.map((option,optionIndex)=><label className={`quiz-option ${submitted && optionIndex===question.answerIndex?'answer-correct':''} ${submitted && Number(answers[index])===optionIndex && optionIndex!==question.answerIndex?'answer-wrong':''}`} key={optionIndex}><input type="radio" name={`question-${index}`} value={optionIndex} checked={Number(answers[index])===optionIndex} onChange={()=>setAnswers(previous=>({...previous,[index]:optionIndex}))} disabled={submitted}/><span>{option}</span></label>)}</div>{submitted && <div className="quiz-explanation"><strong>{Number(answers[index])===question.answerIndex?'Correct':'Review this answer'}</strong><p>{question.explanation}</p></div>}</article>)}
-      {!submitted ? <button className="button button-primary" disabled={Object.keys(answers).length!==quiz.questions.length} onClick={()=>setSubmitted(true)}><CheckCircle2 size={16}/> Submit answers</button> : <button className="button button-secondary" onClick={()=>{setQuiz(null);setAnswers({});setSubmitted(false)}}><RotateCcw size={16}/> Create another quiz</button>}
+      {!submitted ? <button className="button button-primary" disabled={Object.keys(answers).length!==quiz.questions.length} onClick={submitQuiz}><CheckCircle2 size={16}/> Submit answers</button> : <button className="button button-secondary" onClick={()=>{setQuiz(null);setAnswers({});setSubmitted(false)}}><RotateCcw size={16}/> Create another quiz</button>}
     </section>}
   </div>
 }

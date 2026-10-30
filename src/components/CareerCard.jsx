@@ -1,7 +1,7 @@
 import React from 'react'
 import { ArrowUpRight, Bookmark, BriefcaseBusiness } from 'lucide-react'
 
-export default function CareerCard({ career, saved, onSave, onOpen }) {
+export default function CareerCard({ career, saved, onSave, onOpen, profileScore = 0 }) {
   // Support both the original demo data and backend API data
   const tags = career.tags || career.skills || []
 
@@ -25,6 +25,7 @@ export default function CareerCard({ career, saved, onSave, onOpen }) {
       </div>
 
       <span className="career-category">{career.category}</span>
+      {profileScore > 0 && <span className="profile-match-badge">Suggested from your study profile</span>}
 
       <h3>{career.title}</h3>
 

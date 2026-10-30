@@ -18,13 +18,6 @@ export const careers = [
   { id: 'entrepreneur', title: 'Entrepreneurship', category: 'Business', description: 'Identify a problem, test an idea, and build a sustainable product or service.', interests: ['Business & Strategy', 'Creativity & Design'], skills: ['Customer discovery', 'Planning', 'Communication'], pathway: 'Interview potential users, test a small solution, and learn from evidence.', tags: ['Strategy', 'Building'], level: 'Exploration pathway' },
 ]
 
-export const opportunities = [
-  { id: 'demo-hackathon', title: 'Student Innovation Challenge', provider: 'Demo listing — not a real event', type: 'Competition', eligibility: 'Students; exact requirements not verified', deadline: 'Not verified', status: 'Sample data', description: 'A sample opportunity card to demonstrate how competitions will appear once official listings are added.' },
-  { id: 'demo-scholarship', title: 'Merit Scholarship Programme', provider: 'Demo listing — not a real programme', type: 'Scholarship', eligibility: 'Education and income requirements need official verification', deadline: 'Not verified', status: 'Sample data', description: 'A sample scholarship record showing how requirements and source status will be presented.' },
-  { id: 'demo-internship', title: 'Beginner Project Internship', provider: 'Demo listing — not a real vacancy', type: 'Internship', eligibility: 'Skills and application conditions not verified', deadline: 'Not verified', status: 'Sample data', description: 'A sample internship record. Replace it with a verified employer listing before presenting it as a real opportunity.' },
-  { id: 'demo-exam', title: 'Entrance Exam Planner', provider: 'Demo listing — not an official exam notice', type: 'Exam', eligibility: 'Check the official exam notification', deadline: 'Not verified', status: 'Sample data', description: 'A demonstration entry for exam planning. No date or eligibility is being claimed.' },
-]
-
 export const initialTasks = [
   { id: 1, title: 'Explore two careers that interest you', category: 'Explore', duration: '20 min', done: true },
   { id: 2, title: 'Complete an interest discovery challenge', category: 'Discover', duration: '10 min', done: false },

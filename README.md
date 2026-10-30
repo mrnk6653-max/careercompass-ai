@@ -1,34 +1,22 @@
 # CareerCompass AI
 
-CareerCompass AI is an open-source student career exploration and learning-planning prototype. It combines a React/Vite frontend, an Express API, a hosted Gemma model, and browser-local progress storage.
+CareerCompass AI is a student career exploration and learning-planning app. It combines a React/Vite frontend, an Express API, SQLite account storage, and a hosted Gemma model.
 
 ## Features
 
-- Career explorer with searchable career profiles and saved careers.
-- Interest discovery activities and interest-map exploration.
-- AI Career Companion powered by a hosted Gemma model.
-- Career recommendations based on keyword overlap (exploratory, not a validated assessment).
-- AI Study Plan Generator: goal, current skills, weekly hours, and 1–4 week plan.
-- Add study-plan tasks to the existing roadmap and track completion.
-- Practice Quiz generator with multiple-choice questions, scoring, and explanations.
-- Saved careers, opportunity demonstration cards, and local progress dashboard.
-- Responsive layout for desktop and mobile.
-- Fallback starter plans and quizzes if the AI model cannot return structured output.
-
-## Tech stack
-
-- React 18, Vite, React Router, Lucide React
-- Node.js and Express
-- Google GenAI SDK with a hosted Gemma model
-- `localStorage` for prototype progress and preferences
-
-> **Model hosting:** The app calls a Google-hosted Gemma model using a backend API key. It does not run the model locally. API availability, quotas, and pricing depend on the provider and account.
+- Signup, login, logout, and database-backed student profiles. Signup requires current class/study year, favorite subject, and course/stream.
+- Passwords are hashed with bcrypt. Sessions use HttpOnly, SameSite cookies and server-side expiration.
+- The AI Career Companion is the default page after sign-in. It supports saved conversations, student profiles, validated app context, retry, copy, Markdown, and bounded history.
+- Student data is isolated by account. Existing browser-only progress is copied into the first account that signs in on that browser; original legacy keys are preserved.
+- Career explorer across government service, defence, finance, healthcare, law, engineering, education, media, skilled trades, private business, and self-employment. Career suggestions are ranked from the student's class, favorite subject, course, and other profile details.
+- Opportunity Radar ranks official Indian recruitment, internship, and scholarship portals using the student's study profile and links to each source. Portal listings update at the source; always check current availability and eligibility there.
+- Responsive navigation: desktop sidebar expands from the Dashboard icon on hover or keyboard focus; mobile uses an overlay menu.
 
 ## Requirements
 
-- Node.js 18+ (Node.js 20 LTS recommended)
+- Node.js 24 LTS or later for the backend
 - npm
-- A Google AI Studio API key for Gemma-powered features (optional; fallback plan/quiz templates are returned if no key is configured)
+- A Google AI Studio API key for Gemma-powered chat and generation features
 
 ## Setup
 
@@ -40,44 +28,55 @@ From the project root:
 npm install
 ```
 
-### 2. Configure the backend
+### 2. Configure and install the backend
 
 ```bash
 cd server
 npm install
 ```
 
-Copy `server/.env.example` to `server/.env`, then set your private API key:
+Copy `server/.env.example` to `server/.env`. Set `GEMINI_API_KEY` for AI features. Authentication and SQLite do not require an external database service.
 
 ```dotenv
 PORT=5000
 GEMINI_API_KEY=your_private_key
 GEMMA_MODEL=gemma-4-26b-a4b-it
+DATABASE_PATH=./data/careercompass.sqlite
+CLIENT_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 ```
 
-Never commit `.env` or expose the key in frontend code.
+`PORT`, `GEMMA_MODEL`, `DATABASE_PATH`, and `CLIENT_ORIGINS` are configurable. The default SQLite file is `server/data/careercompass.sqlite` and is git-ignored. For deployment, use persistent disk storage, HTTPS, and set `CLIENT_ORIGINS` to the exact frontend origin(s). Never place secrets in Vite variables or commit `.env` files.
 
 ### 3. Run the backend
 
-From the `server` directory:
+From `server`:
 
 ```bash
 npm run dev
 ```
 
-The API runs at `http://localhost:5000`. Check `http://localhost:5000/api/health`.
+The API runs at `http://localhost:5000`.
 
 ### 4. Run the frontend
 
-Open a second terminal at the project root:
+Open another terminal at the project root:
 
 ```bash
 npm run dev
 ```
 
-Open the Vite URL, usually `http://localhost:5173`.
+Open the Vite URL, usually `http://localhost:5173`. Signed-in users land on the AI Companion. `/welcome` remains the public information page; `/login` and `/signup` provide account access.
 
-The root `.env.example` documents the local frontend API URL. If the backend is hosted elsewhere, create a root `.env` file with `VITE_API_URL=https://your-backend.example` before building. Do not put secret keys in Vite variables; frontend variables are public.
+If the backend uses another host, set `VITE_API_URL` in a root `.env` file. The root `.env.example` shows the local default. Frontend environment variables are public and must not contain secrets.
+
+## Account and data handling
+
+- `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`, `PATCH /api/auth/profile`, and `POST /api/auth/logout` manage accounts and sessions.
+- AI chat, study-plan generation, and quiz generation require a signed-in session. Career reference endpoints remain available without a session.
+- Email and student profile fields (including current class, favorite subject, and course) are stored in SQLite. Passwords are stored as bcrypt hashes. Session tokens are random, stored hashed in SQLite, and sent to the browser only in an HttpOnly cookie.
+- Existing prototype progress and conversation data are migrated to the first account used on a browser and then stored under that account’s localStorage namespace. Other accounts use separate namespaces.
+- Chat requests send the current message, recent conversation context, saved-career / discovery / study-plan / quiz / roadmap summaries, and the saved student profile to the configured AI provider.
+- There is no email verification, password reset, account deletion, multi-device progress sync, or cloud database service in this prototype. Back up the SQLite database file if account records must be retained.
 
 ## Main API routes
 
@@ -85,27 +84,24 @@ The root `.env.example` documents the local frontend API URL. If the backend is 
 - `GET /api/careers`
 - `GET /api/careers/:id`
 - `POST /api/careers/recommend`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+- `PATCH /api/auth/profile`
+- `POST /api/auth/logout`
 - `POST /api/chat`
 - `POST /api/study-plan`
 - `POST /api/quiz/generate`
 
-## Testing checklist
-
-1. Open Career Explorer and save a career.
-2. Open AI Companion and send a message.
-3. Open AI Study Plan, enter a goal and current skills, and generate a plan.
-4. Add the plan tasks to My Roadmap and mark one task complete.
-5. Open Practice Quiz, generate a quiz, answer every question, and submit.
-6. Refresh the browser and confirm saved careers and roadmap progress persist locally.
-7. Check `/api/health` to verify backend status and whether the AI key is configured.
+The chat endpoint validates messages and context, keeps at most 12 recent history messages / 12,000 history characters, limits messages to 5,000 characters, times out at 45 seconds, and applies a per-IP request limit.
 
 ## Prototype limitations
 
-- Career recommendations are based on keyword overlap, not a scientifically validated career-fit assessment.
-- Study plans and quizzes are AI-generated or fallback templates; check important details and treat results as learning aids, not formal assessments.
-- Opportunity cards contain demonstration/sample data. They are not verified live listings and should not be treated as real deadlines or eligibility advice.
-- Student progress and preferences are stored in browser `localStorage`. There is no authentication, server-side database, or cross-device sync.
-- The app does not provide parental/teacher accounts or verified plan approval workflows yet.
+- Career recommendations are based on keyword overlap, not a scientifically validated assessment.
+- Study plans and quizzes are learning aids; review generated details.
+- Opportunity cards contain demonstration/sample data, not verified live listings.
+- SQLite stores account details locally on the backend host; it is not encrypted at rest by this application.
+- Do not deploy over plain HTTP. Production authentication requires HTTPS and a persistent database volume.
 
 ## License
 

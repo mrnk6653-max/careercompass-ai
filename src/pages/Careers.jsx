@@ -21,6 +21,7 @@ import { fetchCareers } from '../services/careersApi'
 
 export default function Careers({
   careers: initialCareers = [],
+  profile = {},
   savedCareers = [],
   toggleSavedCareer = () => {}
 }) {
@@ -84,8 +85,10 @@ export default function Careers({
   // Search careers by title, category, description, skills, and interests.
   const filtered = useMemo(() => {
     const searchText = query.trim().toLowerCase()
+    const profileTerms = [profile.favoriteSubject, profile.course, profile.degree, profile.interests, profile.currentClass]
+      .filter(Boolean).join(' ').toLowerCase().split(/[^a-z0-9+#]+/).filter(term => term.length > 2 && !['class', 'year', 'course', 'and', 'the'].includes(term))
 
-    return careers.filter(career => {
+    return careers.map(career => {
       const matchesCategory =
         category === 'All careers' || career.category === category
 
@@ -101,9 +104,11 @@ export default function Careers({
         .join(' ')
         .toLowerCase()
 
-      return matchesCategory && searchableText.includes(searchText)
-    })
-  }, [careers, category, query])
+      const profileScore = profileTerms.reduce((score, term) => score + (searchableText.includes(term) ? (career.title.toLowerCase().includes(term) || career.category.toLowerCase().includes(term) ? 3 : 1) : 0), 0)
+      return { ...career, profileScore, matchesCategory, searchableText }
+    }).filter(career => career.matchesCategory && career.searchableText.includes(searchText))
+      .sort((a, b) => (b.profileScore || 0) - (a.profileScore || 0))
+  }, [careers, category, query, profile])
 
   const isSaved = careerId =>
     savedCareers.some(id => String(id) === String(careerId))
@@ -113,8 +118,10 @@ export default function Careers({
       <SectionTitle
         eyebrow="EXPLORE POSSIBILITIES"
         title="Careers to be curious about."
-        description="Discover career paths, explore useful skills, and find practical ways to learn more about your interests."
+        description="Explore government, private-sector, healthcare, skilled-trade, creative, and self-employment paths. Your study details bring the closest matches to the top."
       />
+
+      {profile.favoriteSubject || profile.course ? <div className="profile-match-note"><Lightbulb size={16}/><span>Personalized using <strong>{[profile.currentClass, profile.favoriteSubject, profile.course].filter(Boolean).join(' · ')}</strong>. Matches are starting points, not a career test.</span></div> : null}
 
       {/* Search and category filters */}
       <div className="career-toolbar">
@@ -184,6 +191,7 @@ export default function Careers({
               key={career.id}
               career={career}
               saved={isSaved(career.id)}
+              profileScore={career.profileScore}
               onSave={toggleSavedCareer}
               onOpen={setSelected}
             />
