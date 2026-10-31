@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Check, ShieldCheck, UserRound, Bell, Globe, Trash2, LogOut } from 'lucide-react'
+import { Check, ShieldCheck, UserRound, Bell, Globe, Trash2, LogOut, Moon } from 'lucide-react'
 import SectionTitle from '../components/SectionTitle'
 import { useAuth } from '../context/AuthContext'
 import { clearUserStorage, getUserItem, setUserItem } from '../utils/userStorage'
@@ -11,6 +11,13 @@ export default function Settings() {
   const [error, setError] = useState('')
   const [reminders, setReminders] = useState(getUserItem('cc-reminders') !== 'off')
   const [language, setLanguage] = useState(getUserItem('cc-language') || 'English')
+  const [darkMode, setDarkMode] = useState(getUserItem('cc-theme') === 'dark')
+
+  const changeTheme = enabled => {
+    setDarkMode(enabled)
+    setUserItem('cc-theme', enabled ? 'dark' : 'light')
+    window.dispatchEvent(new Event('cc-theme-change'))
+  }
 
   const save = async () => {
     setError('')
@@ -44,6 +51,8 @@ export default function Settings() {
         <label className="form-label account-name-field">Display name<input value={name} onChange={event => setName(event.target.value)} maxLength="80" placeholder="Your name"/></label>
         <div className="settings-heading settings-heading-spaced"><span className="panel-icon panel-icon-amber"><Bell size={19}/></span><div><h2>Reminders</h2><p>Notification controls for future features.</p></div></div>
         <label className="toggle-row"><span><strong>Enable reminders</strong><small>Prototype preference only; no reminders are sent.</small></span><input type="checkbox" checked={reminders} onChange={event => setReminders(event.target.checked)}/></label>
+        <div className="settings-heading settings-heading-spaced"><span className="panel-icon"><Moon size={19}/></span><div><h2>Appearance</h2><p>Choose the look that feels comfortable for you.</p></div></div>
+        <label className="toggle-row"><span><strong>Dark mode</strong><small>Use a darker color theme across your workspace.</small></span><input type="checkbox" checked={darkMode} onChange={event => changeTheme(event.target.checked)} aria-label="Enable dark mode"/></label>
         <div className="settings-heading settings-heading-spaced"><span className="panel-icon panel-icon-violet"><Globe size={19}/></span><div><h2>Language</h2><p>Language preference for future UI localization.</p></div></div>
         <label className="form-label">Preferred language<select value={language} onChange={event => setLanguage(event.target.value)}><option>English</option><option>Hindi</option></select></label>
         {error && <p className="form-error account-error" role="alert">{error}</p>}

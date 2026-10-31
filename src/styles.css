@@ -446,3 +446,69 @@
 .account-settings-actions .button-secondary{margin-top:24px}
 .account-error{margin-top:18px}
 @media(max-width:600px){.auth-page{padding:18px}.auth-card,.auth-card-signup{margin:27px auto 16px;padding:23px 18px}.auth-card-heading h1{font-size:23px}.auth-profile-grid{grid-template-columns:1fr}.auth-topbar .brand{font-size:13px}.auth-privacy{font-size:9px}}
+
+/* Dark theme */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --navy: #e5edf7;
+  --navy2: #cbd8e8;
+  --text: #d8e2ee;
+  --muted: #9aaabd;
+  --line: #2b3a4d;
+  --bg: #111a27;
+  --white: #1a2635;
+  --teal-soft: #183b3a;
+  --shadow: 0 12px 36px rgba(0,0,0,.2);
+  color: var(--text);
+  background: var(--bg);
+}
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] .app-shell,
+:root[data-theme="dark"] .workspace,
+:root[data-theme="dark"] .page-content { background: var(--bg); color: var(--text); }
+:root[data-theme="dark"] .sidebar,
+:root[data-theme="dark"] .topbar,
+:root[data-theme="dark"] .mobile-page-title,
+:root[data-theme="dark"] .settings-panel,
+:root[data-theme="dark"] .settings-side > *,
+:root[data-theme="dark"] .panel,
+:root[data-theme="dark"] .stat-card,
+:root[data-theme="dark"] .career-card,
+:root[data-theme="dark"] .opportunity-card,
+:root[data-theme="dark"] .discovery-card,
+:root[data-theme="dark"] .insight-card,
+:root[data-theme="dark"] .feature-form,
+:root[data-theme="dark"] .feature-side-card,
+:root[data-theme="dark"] .plan-week-card,
+:root[data-theme="dark"] .quiz-panel,
+:root[data-theme="dark"] .conversation-sidebar,
+:root[data-theme="dark"] .chat-panel,
+:root[data-theme="dark"] .profile-view-panel,
+:root[data-theme="dark"] .profile-edit-panel,
+:root[data-theme="dark"] .profile-help-card,
+:root[data-theme="dark"] .account-menu,
+:root[data-theme="dark"] .student-profile-popover { background-color: var(--white); color: var(--text); border-color: var(--line); }
+:root[data-theme="dark"] h1,
+:root[data-theme="dark"] h2,
+:root[data-theme="dark"] h3,
+:root[data-theme="dark"] h4,
+:root[data-theme="dark"] strong,
+:root[data-theme="dark"] .brand,
+:root[data-theme="dark"] .form-label,
+:root[data-theme="dark"] .nav-item { color: var(--navy); }
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] select { background-color: #111a27; color: var(--text); border-color: var(--line); }
+:root[data-theme="dark"] .toggle-row,
+:root[data-theme="dark"] .plan-task,
+:root[data-theme="dark"] .quiz-question { border-color: var(--line); }
+:root[data-theme="dark"] .plan-week-heading,
+:root[data-theme="dark"] .quiz-explanation,
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] .pill-neutral,
+:root[data-theme="dark"] .plan-task-number { background-color: #223246; color: var(--text); }
+:root[data-theme="dark"] .button-secondary { background: #223246; color: var(--text); border-color: var(--line); }
+:root[data-theme="dark"] .mobile-page-title { border-color: var(--line); }
+:root[data-theme="dark"] .app-footer { color: var(--muted); }
+:root[data-theme="dark"] .theme-toggle { color: var(--text); }
+:root[data-theme="dark"] .theme-toggle:hover { background: #26374b; color: #fff; }

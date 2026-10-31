@@ -55,6 +55,12 @@ function CareerWorkspace({ user }) {
   const [savedCareers,setSavedCareers] = useState(()=>readList('cc-saved-careers',[]))
 
   const [savedOpportunities,setSavedOpportunities] = useState(()=>readList('cc-saved-opportunities',[]))
+  useEffect(() => {
+    const applyTheme = () => { document.documentElement.dataset.theme = getUserItem('cc-theme') === 'dark' ? 'dark' : 'light' }
+    applyTheme()
+    window.addEventListener('cc-theme-change', applyTheme)
+    return () => { window.removeEventListener('cc-theme-change', applyTheme); delete document.documentElement.dataset.theme }
+  }, [])
   const opportunities = getPersonalizedOpportunities(user.profile || {})
   useEffect(()=>{setUserItem('cc-tasks',JSON.stringify(tasks))},[tasks])
   useEffect(()=>{setUserItem('cc-discovery-count',String(discoveryCount))},[discoveryCount])

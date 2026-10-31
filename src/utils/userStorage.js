@@ -3,7 +3,7 @@ const migrationKey = 'cc-auth-legacy-migrated'
 const legacyKeys = [
   'cc-tasks', 'cc-discovery-count', 'cc-saved-careers', 'cc-saved-opportunities',
   'cc-last-discovery', 'cc-last-quiz', 'cc-study-plan', 'cc-plan-goal',
-  'cc-plan-skills', 'cc-companion-v2', 'cc-name', 'cc-reminders', 'cc-language',
+  'cc-plan-skills', 'cc-companion-v2', 'cc-name', 'cc-reminders', 'cc-language', 'cc-theme',
 ]
 
 export function activateUserStorage(userId) {
