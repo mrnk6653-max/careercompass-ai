@@ -8,6 +8,40 @@ const COOKIE_SECURE = process.env.NODE_ENV === "production";
 const authAttempts = new Map();
 const dummyPasswordHash = bcrypt.hashSync(crypto.randomBytes(24).toString("hex"), 12);
 const profileKeys = ["degree", "year", "interests", "skills", "experience", "goals", "currentClass", "favoriteSubject", "course"];
+const disposableEmailDomains = new Set([
+  "10minutemail.com", "10minutemail.net", "10minutemail.org", "1secmail.com", "1secmail.net", "getnada.com",
+  "guerrillamail.com", "guerrillamail.net", "guerrillamail.org", "grr.la", "maildrop.cc", "mailinator.com",
+  "mohmal.com", "tempmail.com", "temp-mail.org", "temp-mail.io", "tempmailo.com", "tempmail.plus", "tempail.com",
+  "throwawaymail.com", "yopmail.com", "yopmail.fr", "fakeinbox.com", "dispostable.com", "mintemail.com",
+  "sharklasers.com", "emailondeck.com", "mail.tm", "burnermail.io", "inboxkitten.com", "trashmail.com",
+  "trashmail.me", "trashmail.net", "discard.email", "discardmail.com", "mailnesia.com", "mytemp.email",
+  "tempr.email", "tempmail.net", "tempmailaddress.com", "emailfake.com", "crazymailing.com", "mailcatch.com",
+  "mailsac.com", "harakirimail.com", "jetable.org", "getairmail.com", "tmailor.com", "tmpmail.net",
+  "tmpmail.org", "tempinbox.com", "spamgourmet.com", "anonaddy.me",
+]);
+
+function passwordIsStrong(password) {
+  if (password.length < 8 || Buffer.byteLength(password, "utf8") > 72) return false;
+  const variety = [/[a-z]/.test(password), /[A-Z]/.test(password), /\d/.test(password), /[^A-Za-z0-9]/.test(password)];
+  if (variety.filter(Boolean).length < 3) return false;
+  if (/^(.)\1+$/.test(password) || /^(password|qwerty|letmein|welcome|admin)/i.test(password)) return false;
+  return true;
+}
+
+function isDisposableEmail(email) {
+  const domain = email.split("@").pop().toLowerCase().replace(/\.$/, "");
+  return /(^|[.-])(temp|temporary|disposable|throwaway|trash|burner|fakeinbox|minute)([.-]|$)/i.test(domain)
+    || [...disposableEmailDomains].some((blocked) => domain === blocked || domain.endsWith(`.${blocked}`));
+}
+
+function isAllowedEmailDomain(email) {
+  const domain = email.split("@").pop().toLowerCase().replace(/\.$/, "");
+  return domain === "gmail.com"
+    || domain === "outlook.com"
+    || domain.endsWith(".in")
+    || /\.(edu|gov|mil|ac)$/.test(domain)
+    || domain.endsWith(".nic.in");
+}
 
 function profileFromRow(row) {
   return {
@@ -104,7 +138,9 @@ function mountAuthRoutes(app, allowedOrigins) {
     const password = typeof body.password === "string" ? body.password : "";
     if (displayName.length < 2 || displayName.length > 80) return res.status(400).json({ success: false, message: "Enter a name between 2 and 80 characters." });
     if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ success: false, message: "Enter a valid email address." });
-    if (password.length < 10 || Buffer.byteLength(password, "utf8") > 72) return res.status(400).json({ success: false, message: "Use a password between 10 and 72 bytes." });
+    if (isDisposableEmail(email)) return res.status(400).json({ success: false, message: "Please use a personal or school email address. Temporary email services are not accepted." });
+    if (!isAllowedEmailDomain(email)) return res.status(400).json({ success: false, message: "Use a Gmail or Outlook address, an .in email, or an official education or government email address." });
+    if (!passwordIsStrong(password)) return res.status(400).json({ success: false, message: "Use at least 8 characters with at least 3 of these: lowercase, uppercase, number, and symbol. Avoid common or repeated passwords." });
 
     const profileInput = body.profile && typeof body.profile === "object" && !Array.isArray(body.profile) ? body.profile : body;
     const profile = readProfile(profileInput);

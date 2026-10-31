@@ -441,6 +441,7 @@
 .auth-loading{min-height:100vh;display:flex;align-items:center;justify-content:center;gap:10px;color:#708094;font-size:14px}
 .auth-loading .loading-dot{width:9px;height:9px;border-radius:50%;background:var(--teal);animation:typingBounce .7s infinite alternate}
 .account-name-field{margin-top:16px}
+.auth-password-hint{display:block;margin-top:6px;color:#718094;font-size:10px;line-height:1.5}
 .account-settings-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .account-settings-actions .settings-save{margin-top:24px}
 .account-settings-actions .button-secondary{margin-top:24px}
@@ -450,15 +451,17 @@
 /* Dark theme */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --navy: #e5edf7;
-  --navy2: #cbd8e8;
-  --text: #d8e2ee;
-  --muted: #9aaabd;
-  --line: #2b3a4d;
-  --bg: #111a27;
-  --white: #1a2635;
-  --teal-soft: #183b3a;
-  --shadow: 0 12px 36px rgba(0,0,0,.2);
+  --navy: #edf4fc;
+  --navy2: #d7e3f1;
+  --text: #dce6f2;
+  --muted: #aebdd0;
+  --line: #35465c;
+  --bg: #0d1521;
+  --white: #172334;
+  --teal: #2fc4b3;
+  --teal-dark: #61d8c8;
+  --teal-soft: #173a3a;
+  --shadow: 0 12px 36px rgba(0,0,0,.28);
   color: var(--text);
   background: var(--bg);
 }
@@ -487,7 +490,18 @@
 :root[data-theme="dark"] .profile-edit-panel,
 :root[data-theme="dark"] .profile-help-card,
 :root[data-theme="dark"] .account-menu,
-:root[data-theme="dark"] .student-profile-popover { background-color: var(--white); color: var(--text); border-color: var(--line); }
+:root[data-theme="dark"] .student-profile-popover,
+:root[data-theme="dark"] .welcome-badge,
+:root[data-theme="dark"] .roadmap-preview,
+:root[data-theme="dark"] .roadmap-preview-item,
+:root[data-theme="dark"] .profile-mini,
+:root[data-theme="dark"] .quick-interest-card,
+:root[data-theme="dark"] .career-modal,
+:root[data-theme="dark"] .account-menu-heading,
+:root[data-theme="dark"] .chat-bubble.assistant,
+:root[data-theme="dark"] .chat-input-row textarea,
+:root[data-theme="dark"] .roadmap-task-card,
+:root[data-theme="dark"] .timeline-task-card { background-color: var(--white); color: var(--text); border-color: var(--line); }
 :root[data-theme="dark"] h1,
 :root[data-theme="dark"] h2,
 :root[data-theme="dark"] h3,
@@ -512,3 +526,25 @@
 :root[data-theme="dark"] .app-footer { color: var(--muted); }
 :root[data-theme="dark"] .theme-toggle { color: var(--text); }
 :root[data-theme="dark"] .theme-toggle:hover { background: #26374b; color: #fff; }
+:root[data-theme="dark"] p,
+:root[data-theme="dark"] small,
+:root[data-theme="dark"] .muted-small,
+:root[data-theme="dark"] .stat-note,
+:root[data-theme="dark"] .welcome-row p,
+:root[data-theme="dark"] .profile-mini span,
+:root[data-theme="dark"] .roadmap-preview-item span,
+:root[data-theme="dark"] .quick-interest-card > span:not(.quick-interest-icon),
+:root[data-theme="dark"] .chat-bubble { color: #b6c4d6; }
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] .pill-neutral,
+:root[data-theme="dark"] .type-pill,
+:root[data-theme="dark"] .sample-badge { border: 1px solid #3b4d62; }
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] .pill-neutral { background: #223247; color: #dce6f2; }
+:root[data-theme="dark"] .button-primary { background: #168f84; color: #fff; }
+:root[data-theme="dark"] .button-primary:hover { background: #20a899; }
+:root[data-theme="dark"] .button-secondary:hover { background: #2a3c52; }
+:root[data-theme="dark"] .icon-button { color: #b6c4d6; }
+:root[data-theme="dark"] .icon-button:hover { background: #26374b; color: #f3f7fc; }
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder { color: #8597ad; opacity: 1; }

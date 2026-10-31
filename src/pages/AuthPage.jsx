@@ -53,10 +53,10 @@ export default function AuthPage({ mode = 'login' }) {
       {(error || connectionError) && <div className="form-error" role="alert">{error || connectionError}</div>}
       <form className="auth-form" onSubmit={submit}>
         {isSignup && <label className="form-label">Full name<input name="displayName" autoComplete="name" minLength="2" maxLength="80" required placeholder="Your name"/></label>}
-        <label className="form-label">Email address<input name="email" type="email" autoComplete="email" maxLength="254" required placeholder="you@example.com"/></label>
-        <label className="form-label">Password<input name="password" type="password" autoComplete={isSignup ? 'new-password' : 'current-password'} minLength="10" maxLength="72" required placeholder={isSignup ? 'At least 10 characters' : 'Your password'}/></label>
+        <label className="form-label">Email address<input name="email" type="email" autoComplete="email" maxLength="254" required placeholder="you@example.com"/>{isSignup && <small className="auth-password-hint">Use Gmail, Outlook, an .in address, or an official education or government email.</small>}</label>
+        <label className="form-label">Password<input name="password" type="password" autoComplete={isSignup ? 'new-password' : 'current-password'} minLength={isSignup ? '8' : undefined} maxLength="72" required placeholder={isSignup ? 'At least 8 characters' : 'Your password'}/>{isSignup && <small className="auth-password-hint">Use 3 of 4: lowercase, uppercase, number, symbol. Avoid common passwords.</small>}</label>
         {isSignup && <>
-          <label className="form-label">Confirm password<input name="confirmPassword" type="password" autoComplete="new-password" minLength="10" maxLength="72" required placeholder="Enter your password again"/></label>
+          <label className="form-label">Confirm password<input name="confirmPassword" type="password" autoComplete="new-password" minLength="8" maxLength="72" required placeholder="Enter your password again"/></label>
           <div className="auth-student-basics"><h2>About your studies</h2><p>We use this to tailor career paths and opportunities to you.</p><div className="auth-profile-grid">{requiredStudentFields.map(([key,label,placeholder])=><label className="form-label" key={key}>{label}<input name={key} required maxLength="160" placeholder={placeholder}/></label>)}</div></div>
           <details className="auth-profile-details"><summary>Personalize your mentor <span>Optional</span></summary><div className="auth-profile-grid">{profileFields.map(([key,label,placeholder])=><label className="form-label" key={key}>{label}<input name={key} maxLength="160" placeholder={placeholder}/></label>)}</div></details>
         </>}
